@@ -57,7 +57,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
                     width: 8,
                     height: 8,
                     decoration: BoxDecoration(
-                      color: VetlyTheme.primaryTeal.withValues(alpha: 0.8),
+                      color: velyTheme.primaryTeal.withValues(alpha: 0.8),
                       shape: BoxShape.circle,
                     ),
                   ),

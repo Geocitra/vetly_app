@@ -25,7 +25,7 @@ class ChatBubble extends StatelessWidget {
               message.text,
               style: const TextStyle(
                 fontSize: 12,
-                color: VetlyTheme.textGrey,
+                color: velyTheme.textGrey,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -56,15 +56,15 @@ class ChatBubble extends StatelessWidget {
         decoration: BoxDecoration(
           // Warna User: Teal Transparan (Immersive), Warna Dokter: Putih Bersih
           color: isUser
-              ? VetlyTheme.primaryTeal.withValues(alpha: 0.9)
-              : VetlyTheme.surfaceWhite,
+              ? velyTheme.primaryTeal.withValues(alpha: 0.9)
+              : velyTheme.surfaceWhite,
           borderRadius: borderRadius,
           // Border tipis abu-abu hanya untuk bubble dokter
           border: isUser ? null : Border.all(color: Colors.grey.shade200),
           boxShadow: [
             BoxShadow(
               color: isUser
-                  ? VetlyTheme.primaryTeal.withValues(alpha: 0.15)
+                  ? velyTheme.primaryTeal.withValues(alpha: 0.15)
                   : Colors.black.withValues(alpha: 0.03),
               blurRadius: 10,
               offset: const Offset(0, 4),
@@ -79,7 +79,7 @@ class ChatBubble extends StatelessWidget {
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
                   // Kontras teks disesuaikan dengan warna bubble
-                  color: isUser ? VetlyTheme.surfaceWhite : VetlyTheme.textDark,
+                  color: isUser ? velyTheme.surfaceWhite : velyTheme.textDark,
                   height: 1.4, // Line height yang nyaman dibaca (Calm UI)
                 ),
               ),

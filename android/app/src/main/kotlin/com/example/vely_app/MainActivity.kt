@@ -1,4 +1,4 @@
-package com.example.vely_app
+package com.example.velyapp
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -22,11 +22,11 @@ class ResponsiveWrapper extends StatelessWidget {
           child: Container(
             // Kanvas utama aplikasi
             decoration: BoxDecoration(
-              color: VetlyTheme.backgroundLight,
+              color: velyTheme.backgroundLight,
               boxShadow: [
                 BoxShadow(
                   // Bayangan pendar yang luas untuk efek 'Floating'
-                  color: VetlyTheme.primaryTeal.withValues(alpha: 0.08),
+                  color: velyTheme.primaryTeal.withValues(alpha: 0.08),
                   blurRadius: 40,
                   spreadRadius: 5,
                   offset: const Offset(0, 10),

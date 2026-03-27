@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class VetlyTheme {
+// ignore: camel_case_types
+class velyTheme {
   // Warna Utama (Primary)
   static const Color primaryTeal = Color(0xFF00A896);
   static const Color secondaryTeal = Color(0xFF02C39A);

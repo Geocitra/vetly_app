@@ -1,6 +1,6 @@
 {
-    "name": "vely_app",
-    "short_name": "vely_app",
+    "name": "velyapp",
+    "short_name": "velyapp",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

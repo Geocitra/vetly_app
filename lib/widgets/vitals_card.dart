@@ -12,7 +12,7 @@ class VitalsCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20),
       decoration: BoxDecoration(
-        color: VetlyTheme.surfaceWhite,
+        color: velyTheme.surfaceWhite,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
@@ -52,13 +52,13 @@ class VitalsCard extends StatelessWidget {
   }) {
     return Column(
       children: [
-        Icon(icon, color: iconColor ?? VetlyTheme.primaryTeal, size: 26),
+        Icon(icon, color: iconColor ?? velyTheme.primaryTeal, size: 26),
         const SizedBox(height: 8),
         Text(
           label,
           style: const TextStyle(
             fontSize: 12,
-            color: VetlyTheme.textGrey,
+            color: velyTheme.textGrey,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -68,7 +68,7 @@ class VitalsCard extends StatelessWidget {
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w800,
-            color: VetlyTheme.textDark,
+            color: velyTheme.textDark,
           ),
         ),
       ],

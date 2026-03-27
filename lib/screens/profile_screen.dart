@@ -5,6 +5,11 @@ import '../core/constants/theme.dart';
 import '../core/utils/responsive_wrapper.dart';
 import '../providers/triage_provider.dart';
 
+// Import ketiga layar yang sudah kita buat
+import 'medical_record_screen.dart';
+import 'vaccine_schedule_screen.dart';
+import 'consultation_history_screen.dart';
+
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -13,12 +18,19 @@ class ProfileScreen extends StatelessWidget {
     final pet = context.watch<TriageProvider>().currentPet;
 
     return Scaffold(
-      backgroundColor: VetlyTheme.backgroundLight,
+      backgroundColor: velyTheme.backgroundLight,
       appBar: AppBar(
-        title: const Text('Profil Peliharaan'),
+        title: const Text(
+          'Profil Peliharaan',
+          style: TextStyle(
+            color: velyTheme.textDark,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
+        automaticallyImplyLeading: false, // Jika ini tab utama
       ),
       body: ResponsiveWrapper(
         child: SingleChildScrollView(
@@ -40,7 +52,7 @@ class ProfileScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: VetlyTheme.primaryTeal,
+                              color: velyTheme.primaryTeal,
                               width: 2,
                             ),
                           ),
@@ -52,7 +64,7 @@ class ProfileScreen extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: const BoxDecoration(
-                            color: VetlyTheme.primaryTeal,
+                            color: velyTheme.primaryTeal,
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
@@ -69,14 +81,14 @@ class ProfileScreen extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w800,
-                        color: VetlyTheme.textDark,
+                        color: velyTheme.textDark,
                       ),
                     ),
                     Text(
                       '${pet.breed} • 4 Bulan',
                       style: const TextStyle(
                         fontSize: 14,
-                        color: VetlyTheme.textGrey,
+                        color: velyTheme.textGrey,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -91,7 +103,11 @@ class ProfileScreen extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Peliharaan Saya',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: velyTheme.textDark,
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
@@ -104,22 +120,46 @@ class ProfileScreen extends StatelessWidget {
 
               const SizedBox(height: 32),
 
-              // 3. MENU GROUPS
+              // 3. MENU GROUPS (Sudah Terhubung Sepenuhnya)
               _buildMenuSection('Aktivitas Medis', [
                 _buildMenuItem(
                   Icons.description_outlined,
                   'Rekam Medis Digital',
                   Colors.blue,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MedicalRecordScreen(),
+                      ),
+                    );
+                  },
                 ),
                 _buildMenuItem(
                   Icons.event_note_rounded,
                   'Jadwal Vaksinasi',
                   Colors.orange,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const VaccineScheduleScreen(),
+                      ),
+                    );
+                  },
                 ),
                 _buildMenuItem(
                   Icons.history_rounded,
                   'Riwayat Konsultasi',
                   Colors.purple,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ConsultationHistoryScreen(),
+                      ),
+                    );
+                  },
                 ),
               ]),
 
@@ -173,7 +213,7 @@ class ProfileScreen extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-          color: isActive ? VetlyTheme.primaryTeal : Colors.transparent,
+          color: isActive ? velyTheme.primaryTeal : Colors.transparent,
           width: 2,
         ),
       ),
@@ -189,7 +229,7 @@ class ProfileScreen extends StatelessWidget {
         color: Colors.grey.shade200,
         shape: BoxShape.circle,
       ),
-      child: const Icon(Icons.add_rounded, color: VetlyTheme.textGrey),
+      child: const Icon(Icons.add_rounded, color: velyTheme.textGrey),
     );
   }
 
@@ -202,7 +242,7 @@ class ProfileScreen extends StatelessWidget {
           style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w700,
-            color: VetlyTheme.textGrey,
+            color: velyTheme.textGrey,
           ),
         ),
         const SizedBox(height: 12),
@@ -224,7 +264,13 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuItem(IconData icon, String label, Color color) {
+  // Fungsi Helper dengan parameter onTap opsional
+  Widget _buildMenuItem(
+    IconData icon,
+    String label,
+    Color color, {
+    VoidCallback? onTap,
+  }) {
     return ListTile(
       leading: Container(
         padding: const EdgeInsets.all(8),
@@ -239,16 +285,24 @@ class ProfileScreen extends StatelessWidget {
         style: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w600,
-          color: VetlyTheme.textDark,
+          color: velyTheme.textDark,
         ),
       ),
       trailing: const Icon(
         Icons.arrow_forward_ios_rounded,
         size: 14,
-        color: VetlyTheme.textGrey,
+        color: velyTheme.textGrey,
       ),
       onTap: () {
         HapticFeedback.lightImpact();
+        if (onTap != null) {
+          onTap();
+        } else {
+          // Placeholder jika fungsi onTap belum diimplementasi (misal untuk menu Lainnya)
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(content: Text('$label akan segera hadir!'), behavior: SnackBarBehavior.floating),
+          // );
+        }
       },
     );
   }

@@ -14,7 +14,7 @@ class PetCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24), // Padding lega untuk kesan 'Calm'
       decoration: BoxDecoration(
-        color: VetlyTheme.surfaceWhite,
+        color: velyTheme.surfaceWhite,
         borderRadius: BorderRadius.circular(
           24,
         ), // Sudut sangat membulat (aman & ramah)
@@ -40,13 +40,13 @@ class PetCard extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  VetlyTheme.primaryTeal.withValues(alpha: 0.1),
-                  VetlyTheme.primaryTeal.withValues(alpha: 0.02),
+                  velyTheme.primaryTeal.withValues(alpha: 0.1),
+                  velyTheme.primaryTeal.withValues(alpha: 0.02),
                 ],
               ),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: VetlyTheme.primaryTeal.withValues(alpha: 0.15),
+                color: velyTheme.primaryTeal.withValues(alpha: 0.15),
                 width: 1.5,
               ),
             ),
@@ -59,7 +59,7 @@ class PetCard extends StatelessWidget {
                 errorBuilder: (context, error, stackTrace) => const Icon(
                   Icons.pets_rounded,
                   size: 40,
-                  color: VetlyTheme.primaryTeal,
+                  color: velyTheme.primaryTeal,
                 ),
               ),
             ),
@@ -75,7 +75,7 @@ class PetCard extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w800, // Extra Bold untuk nama
-                    color: VetlyTheme.textDark,
+                    color: velyTheme.textDark,
                     letterSpacing: -0.5,
                   ),
                 ),
@@ -85,7 +85,7 @@ class PetCard extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: VetlyTheme.textGrey,
+                    color: velyTheme.textGrey,
                   ),
                 ),
                 const SizedBox(height: 12),

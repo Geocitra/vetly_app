@@ -42,9 +42,9 @@ class CustomButton extends StatelessWidget {
         child: OutlinedButton(
           onPressed: onPressed,
           style: OutlinedButton.styleFrom(
-            foregroundColor: VetlyTheme.primaryTeal,
+            foregroundColor: velyTheme.primaryTeal,
             side: BorderSide(
-              color: isDisabled ? Colors.grey.shade300 : VetlyTheme.primaryTeal,
+              color: isDisabled ? Colors.grey.shade300 : velyTheme.primaryTeal,
               width: 2, // Border sedikit lebih tebal agar terlihat solid
             ),
             shape: RoundedRectangleBorder(
@@ -68,7 +68,7 @@ class CustomButton extends StatelessWidget {
             : [
                 BoxShadow(
                   // Bayangan pendar Teal (bukan hitam) untuk efek mewah
-                  color: VetlyTheme.primaryTeal.withValues(alpha: 0.25),
+                  color: velyTheme.primaryTeal.withValues(alpha: 0.25),
                   blurRadius: 20,
                   spreadRadius: 1,
                   offset: const Offset(0, 8),
@@ -78,14 +78,14 @@ class CustomButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: VetlyTheme.primaryTeal,
-          foregroundColor: VetlyTheme.surfaceWhite, // Warna teks dan ikon
+          backgroundColor: velyTheme.primaryTeal,
+          foregroundColor: velyTheme.surfaceWhite, // Warna teks dan ikon
           elevation: 0, // Elevation ditangani oleh Container Shadow
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
           // Perbaikan: Menggunakan overlayColor untuk efek splash/ripple
-          overlayColor: VetlyTheme.surfaceWhite.withValues(alpha: 0.1),
+          overlayColor: velyTheme.surfaceWhite.withValues(alpha: 0.1),
         ),
         child: buttonContent,
       ),

@@ -70,7 +70,7 @@ class _ResultScreenState extends State<ResultScreen>
               'Ada indikasi gangguan kesehatan menengah. Disarankan konsultasi dengan ahli.',
           'points': [
             'Gejala menunjukkan indikasi infeksi atau ketidaknyamanan.',
-            'Segera konsultasikan dengan dokter hewan online Vetly.',
+            'Segera konsultasikan dengan dokter hewan online vely.',
             'Tolong jangan berikan obat manusia tanpa resep dokter.',
           ],
         };
@@ -107,7 +107,7 @@ class _ResultScreenState extends State<ResultScreen>
     final List<String> actionPoints = config['points'];
 
     return Scaffold(
-      backgroundColor: VetlyTheme.backgroundLight,
+      backgroundColor: velyTheme.backgroundLight,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -120,7 +120,7 @@ class _ResultScreenState extends State<ResultScreen>
           icon: const Icon(
             Icons.close_rounded,
             size: 26,
-            color: VetlyTheme.textDark,
+            color: velyTheme.textDark,
           ),
           onPressed: () =>
               Navigator.popUntil(context, (route) => route.isFirst),
@@ -168,7 +168,7 @@ class _ResultScreenState extends State<ResultScreen>
                           child: Container(
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
-                              color: VetlyTheme.surfaceWhite,
+                              color: velyTheme.surfaceWhite,
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
@@ -203,7 +203,7 @@ class _ResultScreenState extends State<ResultScreen>
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
-                            color: VetlyTheme.textDark.withValues(alpha: 0.8),
+                            color: velyTheme.textDark.withValues(alpha: 0.8),
                             height: 1.5,
                           ),
                         ),
@@ -216,7 +216,7 @@ class _ResultScreenState extends State<ResultScreen>
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: VetlyTheme.surfaceWhite,
+                      color: velyTheme.surfaceWhite,
                       borderRadius: BorderRadius.circular(24),
                       boxShadow: [
                         BoxShadow(
@@ -242,7 +242,7 @@ class _ResultScreenState extends State<ResultScreen>
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w800,
-                                color: VetlyTheme.textDark,
+                                color: velyTheme.textDark,
                               ),
                             ),
                           ],
@@ -275,7 +275,7 @@ class _ResultScreenState extends State<ResultScreen>
                                     style: const TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w500,
-                                      color: VetlyTheme.textGrey,
+                                      color: velyTheme.textGrey,
                                       height: 1.4,
                                     ),
                                   ),
@@ -305,7 +305,7 @@ class _ResultScreenState extends State<ResultScreen>
                   child: Container(
                     padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
                     decoration: BoxDecoration(
-                      color: VetlyTheme.backgroundLight.withValues(alpha: 0.75),
+                      color: velyTheme.backgroundLight.withValues(alpha: 0.75),
                       border: Border(
                         top: BorderSide(
                           color: Colors.white.withValues(alpha: 0.6),

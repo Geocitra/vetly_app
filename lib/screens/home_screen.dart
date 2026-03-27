@@ -11,6 +11,9 @@ import '../widgets/ecosystem_card.dart';
 import 'triage_screen.dart';
 import 'profile_screen.dart';
 import 'medical_record_screen.dart'; // 1. Import layar Rekam Medis baru
+import 'article_screen.dart'; // Tambahkan ini di deretan import
+import 'clinic_map_screen.dart';
+import 'vaccine_schedule_screen.dart'; // Ganti import ini
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -37,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _lastPressedAt = now;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Tekan sekali lagi untuk keluar dari VETLY'),
+          content: const Text('Tekan sekali lagi untuk keluar dari vely'),
           duration: const Duration(seconds: 2),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
@@ -65,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
       canPop: false,
       onPopInvokedWithResult: _handlePopInvocation,
       child: Scaffold(
-        backgroundColor: VetlyTheme.backgroundLight,
+        backgroundColor: velyTheme.backgroundLight,
         body: ResponsiveWrapper(
           // IndexedStack menjaga state halaman agar tidak ter-reset saat ganti tab
           child: IndexedStack(index: _currentIndex, children: pages),
@@ -73,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
-            color: VetlyTheme.surfaceWhite,
+            color: velyTheme.surfaceWhite,
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.03),
@@ -84,8 +87,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           child: BottomNavigationBar(
             backgroundColor: Colors.transparent,
-            selectedItemColor: VetlyTheme.primaryTeal,
-            unselectedItemColor: VetlyTheme.textGrey.withValues(alpha: 0.6),
+            selectedItemColor: velyTheme.primaryTeal,
+            unselectedItemColor: velyTheme.textGrey.withValues(alpha: 0.6),
             elevation: 0,
             type: BottomNavigationBarType.fixed,
             selectedLabelStyle: const TextStyle(
@@ -138,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
               expandedHeight: screenHeight * 0.42,
               pinned: true,
               stretch: true,
-              backgroundColor: VetlyTheme.backgroundLight,
+              backgroundColor: velyTheme.backgroundLight,
               elevation: 0,
               flexibleSpace: FlexibleSpaceBar(
                 stretchModes: const [StretchMode.zoomBackground],
@@ -155,8 +158,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             colors: [
                               Colors.black.withValues(alpha: 0.4),
                               Colors.transparent,
-                              VetlyTheme.backgroundLight.withValues(alpha: 0.8),
-                              VetlyTheme.backgroundLight,
+                              velyTheme.backgroundLight.withValues(alpha: 0.8),
+                              velyTheme.backgroundLight,
                             ],
                             stops: const [0.0, 0.3, 0.85, 1.0],
                           ),
@@ -183,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: const TextStyle(
                         fontSize: 26,
                         fontWeight: FontWeight.w800,
-                        color: VetlyTheme.textDark,
+                        color: velyTheme.textDark,
                         letterSpacing: -0.5,
                       ),
                     ),
@@ -193,7 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
-                        color: VetlyTheme.textGrey,
+                        color: velyTheme.textGrey,
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -203,11 +206,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     const SizedBox(height: 32),
                     const Text(
-                      'Layanan Ekosistem Vetly',
+                      'Layanan Ekosistem vely',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w800,
-                        color: VetlyTheme.textDark,
+                        color: velyTheme.textDark,
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -257,21 +260,40 @@ class _HomeScreenState extends State<HomeScreen> {
           title: 'Cari Klinik',
           subtitle: 'MAPS',
           primaryColor: Colors.red.shade500,
-          onTap: () => _showComingSoon(context, 'Peta Klinik Terdekat'),
+          onTap: () {
+            // PERUBAHAN: Buka halaman ClinicMapScreen
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ClinicMapScreen()),
+            );
+          },
         ),
         EcosystemCard(
-          icon: Icons.shopping_bag_rounded,
-          title: 'Vetly Mart',
-          subtitle: 'PROMO',
+          icon: Icons.vaccines,
+          title: 'Jadwal Vaksinasi',
+          subtitle: 'Health Care',
           primaryColor: Colors.orange.shade500,
-          onTap: () => _showComingSoon(context, 'Vetly Mart'),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const VaccineScheduleScreen(),
+              ),
+            );
+          },
         ),
         EcosystemCard(
           icon: Icons.auto_stories_rounded,
           title: 'Artikel Sehat',
           subtitle: 'EDUKASI',
           primaryColor: Colors.purple.shade500,
-          onTap: () => _showComingSoon(context, 'Artikel Kesehatan'),
+          onTap: () {
+            // PERUBAHAN: Buka halaman ArticleScreen
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ArticleScreen()),
+            );
+          },
         ),
       ],
     );
@@ -284,7 +306,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Container(
           padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
           decoration: BoxDecoration(
-            color: VetlyTheme.backgroundLight.withValues(alpha: 0.65),
+            color: velyTheme.backgroundLight.withValues(alpha: 0.65),
             border: Border(
               top: BorderSide(
                 color: Colors.white.withValues(alpha: 0.5),
@@ -293,7 +315,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           child: CustomButton(
-            text: 'Cek Gejala (VETLY AI)',
+            text: 'Cek Gejala (vely AI)',
             icon: Icons.auto_awesome_rounded,
             onPressed: () {
               Navigator.push(
@@ -303,17 +325,6 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
         ),
-      ),
-    );
-  }
-
-  void _showComingSoon(BuildContext context, String feature) {
-    HapticFeedback.mediumImpact();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('$feature akan segera hadir!'),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }

@@ -34,6 +34,8 @@ dependencies:
   provider: ^6.1.5+1
   google_fonts: ^8.0.2
   lottie: ^3.1.2 # Menambahkan Lottie untuk animasi vektor ringan
+  flutter_map: ^8.2.2
+  latlong2: ^0.9.1
 
 dev_dependencies:
   flutter_test:

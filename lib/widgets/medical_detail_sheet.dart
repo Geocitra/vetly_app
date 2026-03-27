@@ -19,7 +19,7 @@ class MedicalDetailSheet extends StatelessWidget {
         builder: (_, controller) {
           return Container(
             decoration: const BoxDecoration(
-              color: VetlyTheme.surfaceWhite,
+              color: velyTheme.surfaceWhite,
               borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
             ),
             child: ListView(
@@ -62,7 +62,7 @@ class MedicalDetailSheet extends StatelessWidget {
                             style: const TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.w800,
-                              color: VetlyTheme.textDark,
+                              color: velyTheme.textDark,
                               letterSpacing: -0.5,
                             ),
                           ),
@@ -70,7 +70,7 @@ class MedicalDetailSheet extends StatelessWidget {
                             'Laporan Terverifikasi • ${entry.date}',
                             style: const TextStyle(
                               fontSize: 14,
-                              color: VetlyTheme.textGrey,
+                              color: velyTheme.textGrey,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -96,14 +96,14 @@ class MedicalDetailSheet extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w800,
-                    color: VetlyTheme.textGrey,
+                    color: velyTheme.textGrey,
                   ),
                 ),
                 const SizedBox(height: 10),
                 Container(
                   padding: const EdgeInsets.all(18),
                   decoration: BoxDecoration(
-                    color: VetlyTheme.backgroundLight,
+                    color: velyTheme.backgroundLight,
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(color: Colors.grey.shade200),
                   ),
@@ -111,7 +111,7 @@ class MedicalDetailSheet extends StatelessWidget {
                     'Pemeriksaan menunjukkan kondisi fisik yang stabil. Detak jantung dan pernapasan dalam batas normal. Hasil observasi menyarankan pemberian hidrasi tambahan. Tidak ditemukan indikasi trauma fisik pada area yang dikeluhkan.',
                     style: TextStyle(
                       fontSize: 15,
-                      color: VetlyTheme.textDark,
+                      color: velyTheme.textDark,
                       height: 1.6,
                       fontWeight: FontWeight.w500,
                     ),
@@ -126,7 +126,7 @@ class MedicalDetailSheet extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w800,
-                    color: VetlyTheme.textGrey,
+                    color: velyTheme.textGrey,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -154,7 +154,7 @@ class MedicalDetailSheet extends StatelessWidget {
                     borderRadius: BorderRadius.circular(18),
                     boxShadow: [
                       BoxShadow(
-                        color: VetlyTheme.primaryTeal.withValues(alpha: 0.2),
+                        color: velyTheme.primaryTeal.withValues(alpha: 0.2),
                         blurRadius: 15,
                         offset: const Offset(0, 8),
                       ),
@@ -162,7 +162,7 @@ class MedicalDetailSheet extends StatelessWidget {
                   ),
                   child: ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: VetlyTheme.primaryTeal,
+                      backgroundColor: velyTheme.primaryTeal,
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18),
@@ -199,7 +199,7 @@ class MedicalDetailSheet extends StatelessWidget {
             label,
             style: const TextStyle(
               fontSize: 13,
-              color: VetlyTheme.textGrey,
+              color: velyTheme.textGrey,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -209,7 +209,7 @@ class MedicalDetailSheet extends StatelessWidget {
             style: const TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.w700,
-              color: VetlyTheme.textDark,
+              color: velyTheme.textDark,
             ),
           ),
         ],
@@ -221,21 +221,21 @@ class MedicalDetailSheet extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: VetlyTheme.surfaceWhite,
+        color: velyTheme.surfaceWhite,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: Colors.grey.shade200),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 20, color: VetlyTheme.primaryTeal),
+          Icon(icon, size: 20, color: velyTheme.primaryTeal),
           const SizedBox(width: 10),
           Text(
             fileName,
             style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w700,
-              color: VetlyTheme.textDark,
+              color: velyTheme.textDark,
             ),
           ),
         ],

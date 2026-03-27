@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../models/chat_message.dart';
 import '../providers/triage_provider.dart';
@@ -19,10 +20,15 @@ class _ChatScreenState extends State<ChatScreen> {
   final List<ChatMessage> _messages = [];
   final ScrollController _scrollController = ScrollController();
 
+  // State baru untuk memunculkan Interactive End Session Card
+  bool _isSessionEnding = false;
+
   @override
   void initState() {
     super.initState();
-    _startSimulationSequence();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startDynamicSimulationSequence();
+    });
   }
 
   void _scrollToBottom() {
@@ -30,8 +36,10 @@ class _ChatScreenState extends State<ChatScreen> {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 400),
-          curve: Curves.easeOutCubic, // Animasi scroll premium
+          duration: const Duration(
+            milliseconds: 500,
+          ), // Diperlambat sedikit agar transisi mulus
+          curve: Curves.easeOutCubic,
         );
       }
     });
@@ -50,7 +58,18 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Future<void> _startSimulationSequence() async {
+  Future<void> _startDynamicSimulationSequence() async {
+    final provider = context.read<TriageProvider>();
+    final petName = provider.currentPet.name;
+
+    final symptomNames = provider.selectedSymptoms
+        .map((s) => s.name.toLowerCase())
+        .toList();
+    final symptomsText = symptomNames.isNotEmpty
+        ? symptomNames.join(', ')
+        : 'gejala tersebut';
+
+    // 1. System Connect
     _addMessage(
       const ChatMessage(
         id: 'sys1',
@@ -61,6 +80,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
     await Future.delayed(const Duration(milliseconds: 1500));
     _removeTypingIndicator();
+
+    // 2. Dokter Menyapa
     _addMessage(
       const ChatMessage(
         id: 't1',
@@ -69,23 +90,36 @@ class _ChatScreenState extends State<ChatScreen> {
         isTyping: true,
       ),
     );
-
     await Future.delayed(const Duration(milliseconds: 2000));
     if (!mounted) return;
-
     _removeTypingIndicator();
-    final doctorGreeting = context
-        .read<TriageProvider>()
-        .generateDoctorOpeningMessage();
+
     _addMessage(
       ChatMessage(
         id: 'msg1',
         sender: MessageSender.doctor,
-        text: doctorGreeting,
+        text:
+            'Halo Kak Budi, saya Dr. Budi. Saya sudah membaca laporan dari vely AI. Saya lihat $petName sedang mengalami $symptomsText ya. Sejak kapan kondisi ini terlihat?',
       ),
     );
 
+    // 3. User Membalas otomatis (Simulasi)
+    await Future.delayed(const Duration(milliseconds: 1800));
+    if (!mounted) return;
+
+    _addMessage(
+      ChatMessage(
+        id: 'msg_user1',
+        sender: MessageSender.user,
+        text:
+            'Iya dok bener banget. Tadi $petName tiba-tiba $symptomsText dan kelihatan agak lemas. Saya panik banget dok, kira-kira kenapa ya?',
+      ),
+    );
+
+    // 4. Dokter Memberikan Solusi Awal
     await Future.delayed(const Duration(milliseconds: 1000));
+    if (!mounted) return;
+
     _addMessage(
       const ChatMessage(
         id: 't2',
@@ -94,29 +128,38 @@ class _ChatScreenState extends State<ChatScreen> {
         isTyping: true,
       ),
     );
-
-    await Future.delayed(const Duration(milliseconds: 2500));
+    await Future.delayed(const Duration(milliseconds: 3000));
+    if (!mounted) return;
     _removeTypingIndicator();
+
     _addMessage(
       const ChatMessage(
         id: 'msg2',
         sender: MessageSender.doctor,
         text:
-            'Sebagai langkah awal sebelum observasi lebih lanjut, tolong berikan air minum sedikit-sedikit saja dan siapkan area yang hangat untuknya beristirahat ya.',
+            'Saya sangat mengerti kekhawatiran Kakak, tolong jangan panik ya. Sebagai langkah observasi awal, tolong berikan air minum sedikit-sedikit saja dan siapkan area yang hangat untuknya beristirahat. Kita akan pantau perkembangannya.',
       ),
     );
+
+    // 5. Trigger Interactive System Card untuk mengakhiri sesi
+    await Future.delayed(const Duration(milliseconds: 2000));
+    if (!mounted) return;
+
+    setState(() {
+      _isSessionEnding = true;
+    });
+    _scrollToBottom();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: VetlyTheme.backgroundLight,
-      // Custom Premium AppBar
+      backgroundColor: velyTheme.backgroundLight,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight + 10),
         child: Container(
           decoration: BoxDecoration(
-            color: VetlyTheme.surfaceWhite.withValues(alpha: 0.95),
+            color: velyTheme.surfaceWhite.withValues(alpha: 0.95),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.03),
@@ -128,11 +171,12 @@ class _ChatScreenState extends State<ChatScreen> {
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
+            titleSpacing: 0,
             leading: IconButton(
               icon: const Icon(
                 Icons.arrow_back_ios_new_rounded,
                 size: 20,
-                color: VetlyTheme.textDark,
+                color: velyTheme.textDark,
               ),
               onPressed: () => Navigator.pop(context),
             ),
@@ -144,19 +188,19 @@ class _ChatScreenState extends State<ChatScreen> {
                       backgroundImage: AssetImage(
                         'lib/public/images/dokter.jpg',
                       ),
-                      radius: 20,
+                      radius: 18,
                     ),
                     Positioned(
                       bottom: 0,
                       right: 0,
                       child: Container(
-                        width: 12,
-                        height: 12,
+                        width: 10,
+                        height: 10,
                         decoration: BoxDecoration(
                           color: Colors.green.shade500,
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: VetlyTheme.surfaceWhite,
+                            color: velyTheme.surfaceWhite,
                             width: 2,
                           ),
                         ),
@@ -164,67 +208,41 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      'Dr. Budi Santoso',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: VetlyTheme.textDark,
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        'Dr. Budi Santoso',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: velyTheme.textDark,
+                        ),
                       ),
-                    ),
-                    Text(
-                      'Dokter Hewan Online',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: VetlyTheme.primaryTeal.withValues(alpha: 0.9),
-                        fontWeight: FontWeight.w600,
+                      Text(
+                        'Dokter Hewan Online',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: velyTheme.primaryTeal.withValues(alpha: 0.9),
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
-            actions: [
-              // Tombol CTA 'Selesai' yang lebih mewah (Soft Chip)
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 12.0,
-                  horizontal: 16.0,
-                ),
-                child: Material(
-                  color: VetlyTheme.primaryTeal.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(12),
-                    onTap: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SummaryScreen(),
-                        ),
-                      );
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Center(
-                        child: Text(
-                          'Selesai',
-                          style: TextStyle(
-                            color: VetlyTheme.primaryTeal,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+            // TOMBOL SELESAI DIHAPUS DARI SINI
+            actions: const [
+              // Ruang kosong untuk menjaga proporsi
+              SizedBox(width: 16),
             ],
           ),
         ),
@@ -232,32 +250,32 @@ class _ChatScreenState extends State<ChatScreen> {
       body: ResponsiveWrapper(
         child: Stack(
           children: [
-            // Implementasi Background Portrait (repeating ubin)
             Positioned.fill(
               child: Image.asset(
-                'lib/public/images/chat_bg_portrait.png', // Path gambar doodle hewan portrait
-                repeat: ImageRepeat.repeat, // Perbaikan: Trik mengulang ubin
-                fit: BoxFit
-                    .none, // Perbaikan: Menjaga proporsi doodle portrait asli
-                // Memberikan overlay efek kaca buram (Frosted Glass)
-                color: VetlyTheme.backgroundLight.withValues(alpha: 0.9),
-                colorBlendMode: BlendMode
-                    .dstATop, // Blend Mode premium agar doodle portrait tembus pandang
+                'lib/public/images/chat_bg_portrait.png',
+                repeat: ImageRepeat.repeat,
+                fit: BoxFit.none,
+                color: velyTheme.backgroundLight.withValues(alpha: 0.9),
+                colorBlendMode: BlendMode.dstATop,
               ),
             ),
-            // List Chat (Berada di lapisan Stack di depan background)
+
+            // List Chat dengan tambahan item terakhir jika _isSessionEnding = true
             ListView.builder(
               controller: _scrollController,
-              padding: const EdgeInsets.only(
-                top: 16,
-                bottom: 100,
-              ), // Padding bawah agar chat tidak tertutup dock
+              padding: const EdgeInsets.only(top: 16, bottom: 120),
               physics: const BouncingScrollPhysics(),
-              itemCount: _messages.length,
-              itemBuilder: (context, index) =>
-                  ChatBubble(message: _messages[index]),
+              // Menambah 1 item pada List jika kartu end session muncul
+              itemCount: _messages.length + (_isSessionEnding ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (index < _messages.length) {
+                  return ChatBubble(message: _messages[index]);
+                } else {
+                  return _buildEndSessionCard();
+                }
+              },
             ),
-            // Floating Input Dock di lapisan atas
+
             Positioned(
               bottom: 0,
               left: 0,
@@ -270,20 +288,137 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  // Komponen Input Chat dengan efek Kaca Buram (Frosted Glass)
+  // KOMPONEN BARU: Interactive Resolution Card (Muncul di dalam aliran chat)
+  Widget _buildEndSessionCard() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: velyTheme.surfaceWhite,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: velyTheme.primaryTeal.withValues(alpha: 0.2),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: velyTheme.primaryTeal.withValues(alpha: 0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: velyTheme.primaryTeal.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.verified_user_rounded,
+              color: velyTheme.primaryTeal,
+              size: 28,
+            ),
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'Sesi Diagnosa Selesai',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+              color: velyTheme.textDark,
+            ),
+          ),
+          const SizedBox(height: 6),
+          const Text(
+            'Apakah panduan dan langkah observasi dari Dokter sudah cukup jelas?',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: velyTheme.textGrey,
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // Tombol Akhiri (Primary)
+          SizedBox(
+            width: double.infinity,
+            height: 48,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: velyTheme.primaryTeal,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              onPressed: () {
+                HapticFeedback.lightImpact();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SummaryScreen(),
+                  ),
+                );
+              },
+              child: const Text(
+                'Ya, Akhiri & Lihat Rangkuman',
+                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+
+          // Tombol Tanya Lagi (Secondary)
+          SizedBox(
+            width: double.infinity,
+            height: 48,
+            child: OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                foregroundColor: velyTheme.textDark,
+                side: BorderSide(color: Colors.grey.shade300, width: 1.5),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              onPressed: () {
+                HapticFeedback.selectionClick();
+                setState(() {
+                  _isSessionEnding = false;
+                  _addMessage(
+                    const ChatMessage(
+                      id: 'sys2',
+                      sender: MessageSender.system,
+                      text:
+                          'Sesi diperpanjang. Silakan ketik pertanyaan lanjutan Anda.',
+                    ),
+                  );
+                });
+              },
+              child: const Text(
+                'Belum, Saya Mau Tanya Lagi',
+                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildSimulatedInputBar() {
     return ClipRRect(
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
         child: Container(
-          padding: const EdgeInsets.fromLTRB(
-            16,
-            12,
-            16,
-            24,
-          ), // Ekstra padding bawah untuk SafeArea
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
           decoration: BoxDecoration(
-            color: VetlyTheme.surfaceWhite.withValues(alpha: 0.75),
+            color: velyTheme.surfaceWhite.withValues(alpha: 0.75),
             border: Border(
               top: BorderSide(
                 color: Colors.white.withValues(alpha: 0.6),
@@ -293,21 +428,19 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           child: Row(
             children: [
-              // Tombol Attachment (+)
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: VetlyTheme.textGrey.withValues(alpha: 0.1),
+                  color: velyTheme.textGrey.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
                   Icons.add_rounded,
-                  color: VetlyTheme.textGrey,
+                  color: velyTheme.textGrey,
                   size: 24,
                 ),
               ),
               const SizedBox(width: 12),
-              // Field Input Mockup (Pill shape)
               Expanded(
                 child: Container(
                   padding: const EdgeInsets.symmetric(
@@ -315,7 +448,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     vertical: 12,
                   ),
                   decoration: BoxDecoration(
-                    color: VetlyTheme.backgroundLight.withValues(alpha: 0.8),
+                    color: velyTheme.backgroundLight.withValues(alpha: 0.8),
                     borderRadius: BorderRadius.circular(24),
                     border: Border.all(
                       color: Colors.white.withValues(alpha: 0.8),
@@ -325,7 +458,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: const Text(
                     'Ketik pesan...',
                     style: TextStyle(
-                      color: VetlyTheme.textGrey,
+                      color: velyTheme.textGrey,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
@@ -333,15 +466,14 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
               ),
               const SizedBox(width: 12),
-              // Tombol Kirim (Solid Teal dengan Shadow)
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: VetlyTheme.primaryTeal,
+                  color: velyTheme.primaryTeal,
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: VetlyTheme.primaryTeal.withValues(alpha: 0.3),
+                      color: velyTheme.primaryTeal.withValues(alpha: 0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -349,7 +481,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
                 child: const Icon(
                   Icons.send_rounded,
-                  color: VetlyTheme.surfaceWhite,
+                  color: velyTheme.surfaceWhite,
                   size: 20,
                 ),
               ),

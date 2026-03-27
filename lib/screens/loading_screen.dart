@@ -67,7 +67,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     ];
 
     return Scaffold(
-      backgroundColor: VetlyTheme.backgroundLight,
+      backgroundColor: velyTheme.backgroundLight,
       body: ResponsiveWrapper(
         child: Center(
           child: Column(
@@ -79,21 +79,21 @@ class _LoadingScreenState extends State<LoadingScreen> {
                 width: 150,
                 height: 150,
                 fit: BoxFit.contain,
-                // Mengubah warna animasi agar sesuai dengan Tema Teal Vetly
+                // Mengubah warna animasi agar sesuai dengan Tema Teal vely
                 delegates: LottieDelegates(
                   values: [
                     ValueDelegate.color(
                       const [
                         '**',
                       ], // Menerapkan warna pada seluruh layer animasi
-                      value: VetlyTheme.primaryTeal,
+                      value: velyTheme.primaryTeal,
                     ),
                   ],
                 ),
                 // Fallback jika tidak ada koneksi internet saat demo
                 errorBuilder: (context, error, stackTrace) {
                   return const CircularProgressIndicator(
-                    color: VetlyTheme.primaryTeal,
+                    color: velyTheme.primaryTeal,
                     strokeWidth: 3,
                   );
                 },
@@ -123,7 +123,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: VetlyTheme
+                    color: velyTheme
                         .primaryTeal, // Warna teks diselaraskan dengan animasi
                     letterSpacing: 0.3,
                   ),

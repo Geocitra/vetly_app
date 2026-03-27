@@ -1,4 +1,4 @@
-# vely_app
+# velyapp
 
 A new Flutter project.
 

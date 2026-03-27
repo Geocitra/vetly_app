@@ -26,22 +26,22 @@ class SymptomChip extends StatelessWidget {
         decoration: BoxDecoration(
           // Background berubah menjadi Teal pudar jika dipilih
           color: isSelected
-              ? VetlyTheme.primaryTeal.withValues(alpha: 0.1)
-              : VetlyTheme.surfaceWhite,
+              ? velyTheme.primaryTeal.withValues(alpha: 0.1)
+              : velyTheme.surfaceWhite,
           // Bentuk Kapsul/Pill (Stadium)
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             // Border menjadi Teal solid jika dipilih
             color: isSelected
-                ? VetlyTheme.primaryTeal
-                : VetlyTheme.textGrey.withValues(alpha: 0.2),
+                ? velyTheme.primaryTeal
+                : velyTheme.textGrey.withValues(alpha: 0.2),
             width: isSelected ? 1.5 : 1.0,
           ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
                     // Efek 'Glow' Teal saat dipilih
-                    color: VetlyTheme.primaryTeal.withValues(alpha: 0.2),
+                    color: velyTheme.primaryTeal.withValues(alpha: 0.2),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -61,8 +61,8 @@ class SymptomChip extends StatelessWidget {
             Icon(
               isSelected ? Icons.check_circle_rounded : Icons.healing_rounded,
               color: isSelected
-                  ? VetlyTheme.primaryTeal
-                  : VetlyTheme.textGrey.withValues(alpha: 0.5),
+                  ? velyTheme.primaryTeal
+                  : velyTheme.textGrey.withValues(alpha: 0.5),
               size: 28,
             ),
             const SizedBox(height: 8),
@@ -71,9 +71,7 @@ class SymptomChip extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,
-                color: isSelected
-                    ? VetlyTheme.primaryTeal
-                    : VetlyTheme.textDark,
+                color: isSelected ? velyTheme.primaryTeal : velyTheme.textDark,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 letterSpacing: 0.2,
               ),

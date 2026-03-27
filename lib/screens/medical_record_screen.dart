@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../core/constants/theme.dart';
 import '../core/utils/responsive_wrapper.dart';
 import '../providers/triage_provider.dart';
-import '../widgets/medical_detail_sheet.dart'; // Import komponen baru
+import '../widgets/medical_detail_sheet.dart';
 import '../models/medical_entry.dart';
 
 class MedicalRecordScreen extends StatelessWidget {
@@ -24,7 +24,6 @@ class MedicalRecordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final pet = context.read<TriageProvider>().currentPet;
 
-    // Sekarang List<MedicalEntry> akan dikenali secara global
     final List<MedicalEntry> mockEntries = [
       MedicalEntry(
         icon: Icons.assignment_turned_in_rounded,
@@ -35,7 +34,7 @@ class MedicalRecordScreen extends StatelessWidget {
       ),
       MedicalEntry(
         icon: Icons.auto_awesome_rounded,
-        color: VetlyTheme.primaryTeal,
+        color: velyTheme.primaryTeal,
         title: 'Analisa VETLY AI (Muntah)',
         subtitle: 'Saran: Kondisi Sedang • Konsultasi Dokter',
         date: '15 Nov 2023',
@@ -57,7 +56,7 @@ class MedicalRecordScreen extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: VetlyTheme.backgroundLight,
+      backgroundColor: velyTheme.backgroundLight,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
@@ -66,7 +65,7 @@ class MedicalRecordScreen extends StatelessWidget {
         title: const Text(
           'Rekam Medis Digital',
           style: TextStyle(
-            color: VetlyTheme.textDark,
+            color: velyTheme.textDark,
             fontWeight: FontWeight.bold,
             fontSize: 18,
           ),
@@ -93,7 +92,7 @@ class MedicalRecordScreen extends StatelessWidget {
                     bottom: 0,
                     child: Container(
                       width: 2,
-                      color: VetlyTheme.primaryTeal.withValues(alpha: 0.15),
+                      color: velyTheme.primaryTeal.withValues(alpha: 0.15),
                     ),
                   ),
                   ListView.builder(
@@ -117,7 +116,7 @@ class MedicalRecordScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: VetlyTheme.surfaceWhite,
+        color: velyTheme.surfaceWhite,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -139,7 +138,7 @@ class MedicalRecordScreen extends StatelessWidget {
                   'Pemilik data kesehatan:',
                   style: TextStyle(
                     fontSize: 12,
-                    color: VetlyTheme.textGrey,
+                    color: velyTheme.textGrey,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -149,7 +148,7 @@ class MedicalRecordScreen extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: VetlyTheme.textDark,
+                    color: velyTheme.textDark,
                     letterSpacing: -0.3,
                   ),
                 ),
@@ -164,7 +163,7 @@ class MedicalRecordScreen extends StatelessWidget {
             ),
             child: const Icon(
               Icons.qr_code_scanner_rounded,
-              color: VetlyTheme.primaryTeal,
+              color: velyTheme.primaryTeal,
               size: 22,
             ),
           ),
@@ -173,11 +172,12 @@ class MedicalRecordScreen extends StatelessWidget {
     );
   }
 
+  // PERBAIKAN: Search bar dibuat lebih responsif
   Widget _buildSearchBar() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: VetlyTheme.surfaceWhite,
+        color: velyTheme.surfaceWhite,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.grey.shade200),
       ),
@@ -185,15 +185,20 @@ class MedicalRecordScreen extends StatelessWidget {
         children: [
           Icon(
             Icons.search_rounded,
-            color: VetlyTheme.textGrey.withValues(alpha: 0.7),
+            color: velyTheme.textGrey.withValues(alpha: 0.7),
           ),
           const SizedBox(width: 12),
-          Text(
-            'Cari rekam medis (mis. Vaksin Parvo)...',
-            style: TextStyle(
-              color: VetlyTheme.textGrey.withValues(alpha: 0.7),
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
+          // PERBAIKAN: Gunakan Expanded & TextOverflow
+          Expanded(
+            child: Text(
+              'Cari rekam medis (mis. Vaksin Parvo)...',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: velyTheme.textGrey.withValues(alpha: 0.7),
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ],
@@ -228,7 +233,7 @@ class MedicalRecordScreen extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: VetlyTheme.surfaceWhite,
+                color: velyTheme.surfaceWhite,
                 borderRadius: BorderRadius.circular(18),
                 boxShadow: [
                   BoxShadow(
@@ -256,7 +261,7 @@ class MedicalRecordScreen extends StatelessWidget {
                               style: const TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w700,
-                                color: VetlyTheme.textDark,
+                                color: velyTheme.textDark,
                                 height: 1.2,
                               ),
                             ),
@@ -265,7 +270,7 @@ class MedicalRecordScreen extends StatelessWidget {
                               entry.subtitle,
                               style: const TextStyle(
                                 fontSize: 13,
-                                color: VetlyTheme.textGrey,
+                                color: velyTheme.textGrey,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -276,7 +281,7 @@ class MedicalRecordScreen extends StatelessWidget {
                                 vertical: 4,
                               ),
                               decoration: BoxDecoration(
-                                color: VetlyTheme.backgroundLight,
+                                color: velyTheme.backgroundLight,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
@@ -284,7 +289,7 @@ class MedicalRecordScreen extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.bold,
-                                  color: VetlyTheme.textGrey.withValues(
+                                  color: velyTheme.textGrey.withValues(
                                     alpha: 0.8,
                                   ),
                                 ),
@@ -297,7 +302,7 @@ class MedicalRecordScreen extends StatelessWidget {
                       Icon(
                         Icons.arrow_forward_ios_rounded,
                         size: 14,
-                        color: VetlyTheme.textGrey.withValues(alpha: 0.5),
+                        color: velyTheme.textGrey.withValues(alpha: 0.5),
                       ),
                     ],
                   ),
