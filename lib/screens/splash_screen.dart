@@ -99,7 +99,7 @@ class _SplashScreenState extends State<SplashScreen>
 
               // Tipografi Brand
               const Text(
-                'vely',
+                'vetly',
                 style: TextStyle(
                   fontSize: 42,
                   fontWeight: FontWeight.w900,

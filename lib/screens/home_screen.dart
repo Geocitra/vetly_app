@@ -206,7 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     const SizedBox(height: 32),
                     const Text(
-                      'Layanan Ekosistem vely',
+                      'Layanan Ekosistem vetly',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w800,
@@ -315,7 +315,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           child: CustomButton(
-            text: 'Cek Gejala (vely AI)',
+            text: 'Cek Gejala (vetly AI)',
             icon: Icons.auto_awesome_rounded,
             onPressed: () {
               Navigator.push(

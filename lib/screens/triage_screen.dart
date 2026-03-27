@@ -29,7 +29,7 @@ class TriageScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          'Asisten AI vely',
+          'Asisten AI vetly',
           style: TextStyle(
             color: velyTheme.textDark,
             fontWeight: FontWeight.bold,
