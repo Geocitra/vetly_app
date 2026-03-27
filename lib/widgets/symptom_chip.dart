@@ -11,53 +11,71 @@ class SymptomChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    final bool isSelected = symptom.isSelected;
+
+    return GestureDetector(
       onTap: () {
-        // Memberikan getaran halus saat chip ditekan
+        // Micro-interaction Taktil (Haptic Feedback)
         HapticFeedback.lightImpact();
         onTap();
       },
-      borderRadius: BorderRadius.circular(12),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
         decoration: BoxDecoration(
-          // Background berubah menjadi Teal transparan jika dipilih
-          color: symptom.isSelected
+          // Background berubah menjadi Teal pudar jika dipilih
+          color: isSelected
               ? VetlyTheme.primaryTeal.withValues(alpha: 0.1)
               : VetlyTheme.surfaceWhite,
+          // Bentuk Kapsul/Pill (Stadium)
+          borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            // Border menjadi Teal solid jika dipilih, jika tidak abu-abu tipis
-            color: symptom.isSelected
+            // Border menjadi Teal solid jika dipilih
+            color: isSelected
                 ? VetlyTheme.primaryTeal
-                : VetlyTheme.textGrey.withValues(alpha: 0.3),
-            width: symptom.isSelected ? 2 : 1,
+                : VetlyTheme.textGrey.withValues(alpha: 0.2),
+            width: isSelected ? 1.5 : 1.0,
           ),
-          borderRadius: BorderRadius.circular(12),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    // Efek 'Glow' Teal saat dipilih
+                    color: VetlyTheme.primaryTeal.withValues(alpha: 0.2),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.02),
+                    blurRadius: 5,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (symptom.isSelected) ...[
-              const Icon(
-                Icons.check_circle,
-                color: VetlyTheme.primaryTeal,
-                size: 24,
-              ),
-              const SizedBox(height: 4),
-            ],
+            // Ikon Medis/Gejala yang Relevan
+            Icon(
+              isSelected ? Icons.check_circle_rounded : Icons.healing_rounded,
+              color: isSelected
+                  ? VetlyTheme.primaryTeal
+                  : VetlyTheme.textGrey.withValues(alpha: 0.5),
+              size: 28,
+            ),
+            const SizedBox(height: 8),
             Text(
               symptom.name,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,
-                color: symptom.isSelected
+                color: isSelected
                     ? VetlyTheme.primaryTeal
                     : VetlyTheme.textDark,
-                fontWeight: symptom.isSelected
-                    ? FontWeight.bold
-                    : FontWeight.normal,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                letterSpacing: 0.2,
               ),
             ),
           ],

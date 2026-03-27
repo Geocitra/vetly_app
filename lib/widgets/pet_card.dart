@@ -8,51 +8,56 @@ class PetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Mengambil data secara reaktif
     final pet = context.watch<TriageProvider>().currentPet;
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(24), // Padding lega untuk kesan 'Calm'
       decoration: BoxDecoration(
         color: VetlyTheme.surfaceWhite,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(
+          24,
+        ), // Sudut sangat membulat (aman & ramah)
         boxShadow: [
           BoxShadow(
+            // Bayangan pendar yang luas dan transparan (Soft UI)
             color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 24,
+            spreadRadius: 0,
             offset: const Offset(0, 8),
           ),
         ],
       ),
       child: Row(
         children: [
-          // Area Foto Asli Rocky
+          // Area Foto dengan Efek Glassmorphism Hint
           Container(
             width: 86,
             height: 86,
             decoration: BoxDecoration(
+              // Gradasi halus transparan mirip pantulan kaca
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  VetlyTheme.primaryTeal.withValues(alpha: 0.1),
+                  VetlyTheme.primaryTeal.withValues(alpha: 0.02),
+                ],
+              ),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
                 color: VetlyTheme.primaryTeal.withValues(alpha: 0.15),
-                width: 2,
+                width: 1.5,
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: VetlyTheme.primaryTeal.withValues(alpha: 0.1),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
             ),
+            // ClipRRect untuk memastikan foto asli terpotong rapi membulat
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(
-                18,
-              ), // Sedikit lebih kecil dari container agar border terlihat
+              borderRadius: BorderRadius.circular(18),
               child: Image.asset(
-                pet.imageUrl,
+                pet.imageUrl, // Menggunakan gambar asli Golden Retriever
                 fit: BoxFit.cover,
-                // Fallback jika path gambar salah/belum di-load
                 errorBuilder: (context, error, stackTrace) => const Icon(
-                  Icons.pets,
+                  Icons.pets_rounded,
                   size: 40,
                   color: VetlyTheme.primaryTeal,
                 ),
@@ -60,7 +65,7 @@ class PetCard extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 20),
-          // Area Informasi Teks
+          // Area Informasi Teks dengan Hierarki Kuat
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,8 +74,9 @@ class PetCard extends StatelessWidget {
                   pet.name,
                   style: const TextStyle(
                     fontSize: 22,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w800, // Extra Bold untuk nama
                     color: VetlyTheme.textDark,
+                    letterSpacing: -0.5,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -83,10 +89,10 @@ class PetCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                // Premium Badge Indikator Vaksin
+                // Premium Badge Indikator Vaksin (Soft Orange)
                 Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
+                    horizontal: 12,
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
@@ -104,10 +110,12 @@ class PetCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        pet.vaccineStatus.first,
+                        pet
+                            .vaccineStatus
+                            .first, // Skenario: "Rabies (3 Hari Lagi)"
                         style: TextStyle(
                           fontSize: 12,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w700,
                           color: Colors.orange.shade800,
                         ),
                       ),

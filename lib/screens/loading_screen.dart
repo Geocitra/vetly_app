@@ -1,48 +1,34 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:lottie/lottie.dart'; // Import package Lottie
 import '../core/constants/theme.dart';
 import '../core/utils/responsive_wrapper.dart';
 import '../providers/triage_provider.dart';
 import 'result_screen.dart';
 
 class LoadingScreen extends StatefulWidget {
-  // Perbaikan Super Parameter
   const LoadingScreen({super.key});
 
   @override
   State<LoadingScreen> createState() => _LoadingScreenState();
 }
 
-class _LoadingScreenState extends State<LoadingScreen>
-    with SingleTickerProviderStateMixin {
+class _LoadingScreenState extends State<LoadingScreen> {
   int _textIndex = 0;
   Timer? _timer;
-  late final AnimationController _pulseController;
-  late final Animation<double> _pulseAnimation;
 
   @override
   void initState() {
     super.initState();
     final petName = context.read<TriageProvider>().currentPet.name;
 
-    // Teks dinamis untuk visual reasoning
     final List<String> reasoningTexts = [
       'Menganalisis gejala $petName...',
       'Memindai profil ras & usia...',
       'Mengevaluasi riwayat vaksinasi...',
       'Menghitung tingkat risiko...',
     ];
-
-    // Animasi Pulse untuk efek menenangkan (Calm UI)
-    _pulseController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    )..repeat(reverse: true);
-
-    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
-      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
-    );
 
     // Mengganti teks setiap 800 milidetik
     _timer = Timer.periodic(const Duration(milliseconds: 800), (timer) {
@@ -53,8 +39,8 @@ class _LoadingScreenState extends State<LoadingScreen>
       }
     });
 
-    // Aturan 3 Detik: Pindah ke ResultScreen
-    Future.delayed(const Duration(seconds: 3), () {
+    // Pindah ke ResultScreen setelah 3.5 detik (memberi waktu animasi Lottie terlihat penuh)
+    Future.delayed(const Duration(milliseconds: 3500), () {
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -67,7 +53,6 @@ class _LoadingScreenState extends State<LoadingScreen>
   @override
   void dispose() {
     _timer?.cancel();
-    _pulseController.dispose();
     super.dispose();
   }
 
@@ -82,40 +67,65 @@ class _LoadingScreenState extends State<LoadingScreen>
     ];
 
     return Scaffold(
+      backgroundColor: VetlyTheme.backgroundLight,
       body: ResponsiveWrapper(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ScaleTransition(
-                scale: _pulseAnimation,
-                child: Container(
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    // Mengganti .withOpacity dengan .withValues sesuai standar baru
-                    color: VetlyTheme.primaryTeal.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.auto_awesome,
-                    size: 48,
-                    color: VetlyTheme.primaryTeal,
-                  ),
+              // Menggunakan Lottie Animation dari Network
+              Lottie.network(
+                'https://assets9.lottiefiles.com/packages/lf20_t2v9p7p3.json', // URL contoh: radar/loading medis yang smooth
+                width: 150,
+                height: 150,
+                fit: BoxFit.contain,
+                // Mengubah warna animasi agar sesuai dengan Tema Teal Vetly
+                delegates: LottieDelegates(
+                  values: [
+                    ValueDelegate.color(
+                      const [
+                        '**',
+                      ], // Menerapkan warna pada seluruh layer animasi
+                      value: VetlyTheme.primaryTeal,
+                    ),
+                  ],
                 ),
+                // Fallback jika tidak ada koneksi internet saat demo
+                errorBuilder: (context, error, stackTrace) {
+                  return const CircularProgressIndicator(
+                    color: VetlyTheme.primaryTeal,
+                    strokeWidth: 3,
+                  );
+                },
               ),
+
               const SizedBox(height: 32),
+
+              // Teks yang berganti-ganti (Visual Reasoning)
               AnimatedSwitcher(
                 duration: const Duration(milliseconds: 400),
                 transitionBuilder: (Widget child, Animation<double> animation) {
-                  return FadeTransition(opacity: animation, child: child);
+                  // Kombinasi Fade dan Slide pelan untuk kesan mewah
+                  return FadeTransition(
+                    opacity: animation,
+                    child: SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0.0, 0.2),
+                        end: Offset.zero,
+                      ).animate(animation),
+                      child: child,
+                    ),
+                  );
                 },
                 child: Text(
                   reasoningTexts[_textIndex],
                   key: ValueKey<int>(_textIndex),
                   style: const TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: VetlyTheme.textDark,
+                    fontWeight: FontWeight.w600,
+                    color: VetlyTheme
+                        .primaryTeal, // Warna teks diselaraskan dengan animasi
+                    letterSpacing: 0.3,
                   ),
                 ),
               ),

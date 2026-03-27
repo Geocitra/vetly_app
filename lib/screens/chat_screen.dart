@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/chat_message.dart';
@@ -8,7 +9,6 @@ import '../widgets/chat_bubble.dart';
 import 'summary_screen.dart';
 
 class ChatScreen extends StatefulWidget {
-  // 1. Perbaikan Super Parameter
   const ChatScreen({super.key});
 
   @override
@@ -30,8 +30,8 @@ class _ChatScreenState extends State<ChatScreen> {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeOutCubic, // Animasi scroll premium
         );
       }
     });
@@ -51,7 +51,6 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> _startSimulationSequence() async {
-    // 1. Pesan Sistem Awal
     _addMessage(
       const ChatMessage(
         id: 'sys1',
@@ -60,7 +59,6 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
 
-    // 2. Delay & Dokter Mengetik
     await Future.delayed(const Duration(milliseconds: 1500));
     _removeTypingIndicator();
     _addMessage(
@@ -72,11 +70,7 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
 
-    // 3. Pesan Pembuka Dinamis dari Provider
     await Future.delayed(const Duration(milliseconds: 2000));
-
-    // 2. Perbaikan BuildContext Synchronously
-    // Mencegah akses context jika layar sudah ditutup pengguna saat jeda 2 detik
     if (!mounted) return;
 
     _removeTypingIndicator();
@@ -91,7 +85,6 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
 
-    // 4. Dokter Mengetik Saran Lanjutan
     await Future.delayed(const Duration(milliseconds: 1000));
     _addMessage(
       const ChatMessage(
@@ -102,7 +95,6 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
 
-    // 5. Pesan Saran
     await Future.delayed(const Duration(milliseconds: 2500));
     _removeTypingIndicator();
     _addMessage(
@@ -118,107 +110,251 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // Menambahkan foto Dr. Budi di sebelah nama
-        title: Row(
-          children: [
-            const CircleAvatar(
-              backgroundImage: AssetImage('lib/public/images/dokter.jpg'),
-              radius: 18,
+      backgroundColor: VetlyTheme.backgroundLight,
+      // Custom Premium AppBar
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight + 10),
+        child: Container(
+          decoration: BoxDecoration(
+            color: VetlyTheme.surfaceWhite.withValues(alpha: 0.95),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.03),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            leading: IconButton(
+              icon: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                size: 20,
+                color: VetlyTheme.textDark,
+              ),
+              onPressed: () => Navigator.pop(context),
             ),
-            const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            title: Row(
               children: [
-                const Text('Dr. Budi Santoso', style: TextStyle(fontSize: 16)),
-                Text(
-                  'Dokter Hewan Online',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: VetlyTheme.primaryTeal.withValues(alpha: 0.8),
-                    fontWeight: FontWeight.normal,
-                  ),
+                Stack(
+                  children: [
+                    const CircleAvatar(
+                      backgroundImage: AssetImage(
+                        'lib/public/images/dokter.jpg',
+                      ),
+                      radius: 20,
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Container(
+                        width: 12,
+                        height: 12,
+                        decoration: BoxDecoration(
+                          color: Colors.green.shade500,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: VetlyTheme.surfaceWhite,
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'Dr. Budi Santoso',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: VetlyTheme.textDark,
+                      ),
+                    ),
+                    Text(
+                      'Dokter Hewan Online',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: VetlyTheme.primaryTeal.withValues(alpha: 0.9),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const SummaryScreen()),
-              );
-            },
-            child: const Text(
-              'Selesaikan',
-              style: TextStyle(
-                color: VetlyTheme.primaryTeal,
-                fontWeight: FontWeight.bold,
+            actions: [
+              // Tombol CTA 'Selesai' yang lebih mewah (Soft Chip)
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12.0,
+                  horizontal: 16.0,
+                ),
+                child: Material(
+                  color: VetlyTheme.primaryTeal.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SummaryScreen(),
+                        ),
+                      );
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Center(
+                        child: Text(
+                          'Selesai',
+                          style: TextStyle(
+                            color: VetlyTheme.primaryTeal,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
       body: ResponsiveWrapper(
-        child: Column(
+        child: Stack(
           children: [
-            Expanded(
-              child: ListView.builder(
-                controller: _scrollController,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                itemCount: _messages.length,
-                itemBuilder: (context, index) =>
-                    ChatBubble(message: _messages[index]),
+            // Implementasi Background Portrait (repeating ubin)
+            Positioned.fill(
+              child: Image.asset(
+                'lib/public/images/chat_bg_portrait.png', // Path gambar doodle hewan portrait
+                repeat: ImageRepeat.repeat, // Perbaikan: Trik mengulang ubin
+                fit: BoxFit
+                    .none, // Perbaikan: Menjaga proporsi doodle portrait asli
+                // Memberikan overlay efek kaca buram (Frosted Glass)
+                color: VetlyTheme.backgroundLight.withValues(alpha: 0.9),
+                colorBlendMode: BlendMode
+                    .dstATop, // Blend Mode premium agar doodle portrait tembus pandang
               ),
             ),
-            _buildSimulatedInputBar(),
+            // List Chat (Berada di lapisan Stack di depan background)
+            ListView.builder(
+              controller: _scrollController,
+              padding: const EdgeInsets.only(
+                top: 16,
+                bottom: 100,
+              ), // Padding bawah agar chat tidak tertutup dock
+              physics: const BouncingScrollPhysics(),
+              itemCount: _messages.length,
+              itemBuilder: (context, index) =>
+                  ChatBubble(message: _messages[index]),
+            ),
+            // Floating Input Dock di lapisan atas
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: _buildSimulatedInputBar(),
+            ),
           ],
         ),
       ),
     );
   }
 
+  // Komponen Input Chat dengan efek Kaca Buram (Frosted Glass)
   Widget _buildSimulatedInputBar() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: VetlyTheme.surfaceWhite,
-        border: Border(top: BorderSide(color: Colors.grey.shade200)),
-      ),
-      child: SafeArea(
-        child: Row(
-          children: [
-            const Icon(
-              Icons.add_circle_outline,
-              color: VetlyTheme.textGrey,
-              size: 28,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 10,
-                ),
-                decoration: BoxDecoration(
-                  color: VetlyTheme.backgroundLight,
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                child: const Text(
-                  'Ketik pesan...',
-                  style: TextStyle(color: VetlyTheme.textGrey, fontSize: 14),
-                ),
+    return ClipRRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(
+            16,
+            12,
+            16,
+            24,
+          ), // Ekstra padding bawah untuk SafeArea
+          decoration: BoxDecoration(
+            color: VetlyTheme.surfaceWhite.withValues(alpha: 0.75),
+            border: Border(
+              top: BorderSide(
+                color: Colors.white.withValues(alpha: 0.6),
+                width: 1.5,
               ),
             ),
-            const SizedBox(width: 12),
-            const CircleAvatar(
-              backgroundColor: VetlyTheme.primaryTeal,
-              radius: 20,
-              child: Icon(Icons.send, color: VetlyTheme.surfaceWhite, size: 18),
-            ),
-          ],
+          ),
+          child: Row(
+            children: [
+              // Tombol Attachment (+)
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: VetlyTheme.textGrey.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.add_rounded,
+                  color: VetlyTheme.textGrey,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 12),
+              // Field Input Mockup (Pill shape)
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: VetlyTheme.backgroundLight.withValues(alpha: 0.8),
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.8),
+                      width: 1,
+                    ),
+                  ),
+                  child: const Text(
+                    'Ketik pesan...',
+                    style: TextStyle(
+                      color: VetlyTheme.textGrey,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              // Tombol Kirim (Solid Teal dengan Shadow)
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: VetlyTheme.primaryTeal,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: VetlyTheme.primaryTeal.withValues(alpha: 0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.send_rounded,
+                  color: VetlyTheme.surfaceWhite,
+                  size: 20,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

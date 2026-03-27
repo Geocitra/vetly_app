@@ -10,17 +10,24 @@ class ChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Penanganan khusus untuk pesan sistem (contoh: "Menghubungkan...")
+    // Pesan Sistem (Tengah, Abu-abu pudar)
     if (message.sender == MessageSender.system) {
       return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        padding: const EdgeInsets.symmetric(vertical: 20.0),
         child: Center(
-          child: Text(
-            message.text,
-            style: const TextStyle(
-              fontSize: 12,
-              color: VetlyTheme.textGrey,
-              fontStyle: FontStyle.italic,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.black.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              message.text,
+              style: const TextStyle(
+                fontSize: 12,
+                color: VetlyTheme.textGrey,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ),
@@ -28,30 +35,39 @@ class ChatBubble extends StatelessWidget {
     }
 
     final isUser = message.sender == MessageSender.user;
+
+    // Perbaikan Bentuk Bubble Asimetris (Premium UX)
     final borderRadius = BorderRadius.only(
-      topLeft: const Radius.circular(16),
-      topRight: const Radius.circular(16),
-      bottomLeft: isUser ? const Radius.circular(16) : Radius.zero,
-      bottomRight: isUser ? Radius.zero : const Radius.circular(16),
+      topLeft: const Radius.circular(18),
+      topRight: const Radius.circular(18),
+      // Sudut lancip di kiri bawah untuk dokter, kanan bawah untuk user
+      bottomLeft: Radius.circular(isUser ? 18 : 4),
+      bottomRight: Radius.circular(isUser ? 4 : 18),
     );
 
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 16.0),
-        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 18.0),
         constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width * 0.75,
         ),
         decoration: BoxDecoration(
-          color: isUser ? VetlyTheme.primaryTeal : VetlyTheme.surfaceWhite,
+          // Warna User: Teal Transparan (Immersive), Warna Dokter: Putih Bersih
+          color: isUser
+              ? VetlyTheme.primaryTeal.withValues(alpha: 0.9)
+              : VetlyTheme.surfaceWhite,
           borderRadius: borderRadius,
+          // Border tipis abu-abu hanya untuk bubble dokter
           border: isUser ? null : Border.all(color: Colors.grey.shade200),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
-              blurRadius: 5,
-              offset: const Offset(0, 2),
+              color: isUser
+                  ? VetlyTheme.primaryTeal.withValues(alpha: 0.15)
+                  : Colors.black.withValues(alpha: 0.03),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
@@ -60,9 +76,11 @@ class ChatBubble extends StatelessWidget {
             : Text(
                 message.text,
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  // Kontras teks disesuaikan dengan warna bubble
                   color: isUser ? VetlyTheme.surfaceWhite : VetlyTheme.textDark,
-                  height: 1.4,
+                  height: 1.4, // Line height yang nyaman dibaca (Calm UI)
                 ),
               ),
       ),
